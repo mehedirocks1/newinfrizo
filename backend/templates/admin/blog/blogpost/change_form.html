@@ -1,0 +1,88 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+<!-- CKEditor 5 CDN for Rich Text Article Editing -->
+<script src="https://cdn.ckeditor.com/ckeditor5/41.2.0/classic/ckeditor.js"></script>
+
+<style>
+    .ck-editor__editable_inline {
+        min-height: 400px;
+        background-color: var(--body-bg) !important;
+        color: var(--body-fg) !important;
+        border-color: var(--border-color) !important;
+        font-family: 'Open Sans', sans-serif !important;
+    }
+    
+    .ck-editor__editable_inline:focus {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 10px rgba(203, 12, 159, 0.1) !important;
+    }
+
+    .ck.ck-toolbar {
+        background-color: var(--header-bg) !important;
+        border-color: var(--border-color) !important;
+    }
+    
+    .ck.ck-toolbar .ck-button {
+        color: var(--body-fg) !important;
+    }
+
+    .ck.ck-icon {
+        color: var(--body-fg) !important;
+    }
+    
+    .ck.ck-button:hover,
+    .ck.ck-button.ck-on {
+        background-color: var(--selected-bg) !important;
+    }
+    
+    /* Summary editor smaller height */
+    #editor-summary-container .ck-editor__editable_inline {
+        min-height: 150px;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        const contentField = document.querySelector('#id_content');
+        if (contentField) {
+            ClassicEditor
+                .create(contentField, {
+                    toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|', 'undo', 'redo' ]
+                })
+                .then(editor => {
+                    editor.model.document.on('change:data', () => {
+                        contentField.value = editor.getData();
+                    });
+                })
+                .catch(error => {
+                    console.error('CKEditor Error on Content:', error);
+                });
+        }
+
+        const summaryField = document.querySelector('#id_summary');
+        if (summaryField) {
+            // Add a wrapper to style summary differently if needed
+            const wrapper = document.createElement('div');
+            wrapper.id = 'editor-summary-container';
+            summaryField.parentNode.insertBefore(wrapper, summaryField);
+            wrapper.appendChild(summaryField);
+
+            ClassicEditor
+                .create(summaryField, {
+                    toolbar: [ 'bold', 'italic', 'link', '|', 'undo', 'redo' ]
+                })
+                .then(editor => {
+                    editor.model.document.on('change:data', () => {
+                        summaryField.value = editor.getData();
+                    });
+                })
+                .catch(error => {
+                    console.error('CKEditor Error on Summary:', error);
+                });
+        }
+    });
+</script>
+{% endblock %}

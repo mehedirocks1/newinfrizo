@@ -1,0 +1,262 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | Soft UI Dashboard Admin{% endblock %}
+
+{% block branding %}
+<div id="site-name" style="padding: 12px 16px; font-family: 'Open Sans', sans-serif; display: flex; align-items: center; justify-content: space-between; width: 100%;">
+    <a href="{% url 'admin:index' %}" style="text-decoration: none; display: flex; align-items: center; gap: 12px;">
+        <div style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(310deg, #7928CA 0%, #FF0080 100%); display: flex; align-items: center; justify-content: center; color: #ffffff; font-weight: 800; font-size: 16px; box-shadow: 0 4px 15px rgba(203, 12, 159, 0.4);">
+            N
+        </div>
+        <div>
+            <span style="font-size: 16px; font-weight: 700; color: #ffffff; letter-spacing: -0.5px;">NEWINFRIZO</span>
+            <span style="display: block; font-size: 10px; color: #e293d3; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Soft UI Dashboard</span>
+        </div>
+    </a>
+</div>
+{% endblock %}
+
+{% block usertools %}
+<div style="display: flex; align-items: center; gap: 16px; padding-right: 16px;">
+    {{ block.super }}
+</div>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+<style>
+    /* Native Django CSS Variable Overrides for Soft UI Light Mode */
+    :root {
+        --primary: #cb0c9f;
+        --secondary: #141727;
+        --accent: #7928CA;
+        --primary-fg: #ffffff;
+        
+        --body-fg: #344767;
+        --body-bg: #f8f9fa;
+        --body-quiet-color: #8392ab;
+        --body-medium-color: #67748e;
+        --body-loud-color: #252f40;
+        
+        --header-bg: #141727;
+        --breadcrumbs-bg: #ffffff;
+        
+        --link-fg: #cb0c9f;
+        --link-hover-color: #7928CA;
+        --link-selected-fg: #cb0c9f;
+        
+        --border-color: rgba(0, 0, 0, 0.05);
+        --hairline-color: rgba(0, 0, 0, 0.05);
+        
+        --darkened-bg: #ffffff;
+        --selected-bg: rgba(203, 12, 159, 0.06);
+        --selected-row: rgba(203, 12, 159, 0.06);
+        
+        --button-bg: #cb0c9f;
+        --button-hover-bg: #b20a8b;
+        --default-button-bg: #7928CA;
+        --default-button-hover-bg: #5e1c9e;
+    }
+
+    /* Native Django CSS Variable Overrides for Soft UI Dark Mode */
+    html[data-theme="dark"] {
+        --primary: #cb0c9f;
+        --secondary: #030712;
+        --accent: #7928CA;
+        --primary-fg: #ffffff;
+        
+        --body-fg: #f8fafc;
+        --body-bg: #0b0f19;
+        --body-quiet-color: #94a3b8;
+        --body-medium-color: #cbd5e1;
+        --body-loud-color: #ffffff;
+        
+        --header-bg: #030712;
+        --breadcrumbs-bg: #111827;
+        
+        --link-fg: #cb0c9f;
+        --link-hover-color: #7928CA;
+        --link-selected-fg: #cb0c9f;
+        
+        --border-color: rgba(255, 255, 255, 0.12);
+        --hairline-color: rgba(255, 255, 255, 0.12);
+        
+        --darkened-bg: #111827;
+        --selected-bg: rgba(203, 12, 159, 0.15);
+        --selected-row: rgba(203, 12, 159, 0.15);
+        
+        --button-bg: #cb0c9f;
+        --button-hover-bg: #b20a8b;
+        --default-button-bg: #7928CA;
+        --default-button-hover-bg: #5e1c9e;
+    }
+
+    body {
+        font-family: 'Open Sans', sans-serif !important;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Keep structural/aesthetic overrides without hardcoding colors */
+    
+    #header {
+        border-bottom: 1px solid var(--border-color);
+        padding: 10px 20px;
+    }
+
+    div.breadcrumbs {
+        border-bottom: 1px solid var(--border-color);
+        padding: 14px 24px;
+        font-size: 13px;
+        border-radius: 12px;
+        margin: 15px 20px 0;
+        box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+    }
+    
+    html[data-theme="dark"] div.breadcrumbs {
+        box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.4);
+    }
+
+    /* Soft UI Card Containers */
+    .module, .inline-group, fieldset.module {
+        border-radius: 16px;
+        box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+        margin-bottom: 25px;
+        overflow: hidden;
+    }
+    
+    html[data-theme="dark"] .module, html[data-theme="dark"] .inline-group, html[data-theme="dark"] fieldset.module {
+        box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.4);
+    }
+
+    .module h2, .module caption, div.section h2, fieldset h2 {
+        background: linear-gradient(310deg, #141727 0%, #3A416F 100%);
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+        border-radius: 0;
+        padding: 14px 20px;
+    }
+
+    /* Data Tables */
+    #changelist table {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    #changelist table thead th {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        font-weight: 700;
+        padding: 14px 18px;
+    }
+
+    #changelist table tbody td, #changelist table tbody th {
+        padding: 14px 18px;
+        font-size: 13px;
+    }
+
+    /* Inputs */
+    input[type=text], input[type=password], input[type=email], input[type=url], input[type=number], select, textarea {
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 13px;
+        transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 10px rgba(203, 12, 159, 0.25) !important;
+    }
+
+    /* Buttons */
+    .button, input[type=submit], input[type=button], .submit-row input, a.button {
+        background: linear-gradient(310deg, #7928CA 0%, #FF0080 100%);
+        border: none;
+        border-radius: 10px;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 13px;
+        padding: 10px 20px;
+        box-shadow: 0 4px 15px rgba(203,12,159,0.35);
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .button:hover, input[type=submit]:hover, a.button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(203,12,159,0.5);
+    }
+
+    .button.deletelink {
+        background: linear-gradient(310deg, #ea0606 0%, #ff667c 100%);
+        box-shadow: 0 4px 15px rgba(234, 6, 6, 0.35);
+    }
+
+    /* Filter */
+    #changelist-filter {
+        border-radius: 16px;
+        box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+        margin-left: 20px;
+    }
+    
+    html[data-theme="dark"] #changelist-filter {
+        box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.4);
+    }
+
+    #changelist-filter h2 {
+        background: linear-gradient(310deg, #141727 0%, #3A416F 100%);
+        color: #ffffff;
+        border-radius: 16px 16px 0 0;
+    }
+
+    /* Sidebar */
+    #nav-sidebar a {
+        transition: all 0.2s ease;
+        border-radius: 8px;
+        margin: 4px 10px;
+        padding: 10px 15px;
+    }
+    
+    #nav-sidebar a:hover, #nav-sidebar a:focus {
+        background: var(--selected-bg);
+        color: var(--primary);
+    }
+
+    #nav-sidebar tr.current-app a {
+        background: var(--selected-bg);
+        color: var(--primary);
+        font-weight: 700;
+    }
+    
+    /* Action Row */
+    .actions {
+        border-radius: 12px;
+        padding: 12px 16px;
+        box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+    }
+    html[data-theme="dark"] .actions {
+        box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.4);
+    }
+
+    /* Soft UI Badges */
+    .soft-badge {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-block;
+    }
+    .soft-badge-purple { background: rgba(203,12,159,0.15); color: #cb0c9f; }
+    .soft-badge-green { background: rgba(130,214,22,0.15); color: #16a34a; }
+    .soft-badge-blue { background: rgba(33,212,253,0.15); color: #0284c7; }
+</style>
+{% endblock %}

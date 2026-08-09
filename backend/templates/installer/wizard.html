@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewInfrizo Setup Wizard</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --error: #dc2626;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        
+        .wizard-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); width: 100%; max-width: 640px; padding: 32px; }
+        .wizard-header { text-align: center; margin-bottom: 28px; }
+        .wizard-header h1 { font-size: 1.75rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px; }
+        .wizard-header p { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* Stepper Navigation */
+        .stepper { display: flex; justify-content: space-between; position: relative; margin-bottom: 32px; }
+        .stepper::before { content: ''; position: absolute; top: 16px; left: 0; right: 0; height: 2px; background: var(--border); z-index: 1; }
+        .step-item { position: relative; z-index: 2; background: var(--card-bg); padding: 0 8px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .step-circle { width: 32px; height: 32px; border-radius: 50%; background: var(--border); color: var(--text-muted); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.85rem; transition: all 0.3s ease; }
+        .step-label { font-size: 0.75rem; font-weight: 500; color: var(--text-muted); }
+        .step-item.active .step-circle { background: var(--primary); color: #fff; }
+        .step-item.active .step-label { color: var(--primary); font-weight: 600; }
+        .step-item.completed .step-circle { background: var(--success); color: #fff; }
+
+        /* Step Panels */
+        .step-panel { display: none; }
+        .step-panel.active { display: block; animation: fadeIn 0.25s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Form Controls */
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
+        .form-group input, .form-group select { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--primary); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        /* Precheck List */
+        .check-list { list-style: none; margin-bottom: 20px; }
+        .check-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; font-size: 0.9rem; font-weight: 500; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .badge-pass { background: #dcfce7; color: var(--success); }
+        .badge-fail { background: #fee2e2; color: var(--error); }
+
+        /* Actions */
+        .wizard-actions { display: flex; justify-content: space-between; margin-top: 28px; gap: 12px; }
+        .btn { padding: 10px 20px; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; border: none; transition: background 0.2s; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-secondary { background: #e2e8f0; color: var(--text-main); }
+        .btn-secondary:hover { background: #cbd5e1; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Notifications */
+        .alert { padding: 12px 16px; border-radius: 6px; font-size: 0.85rem; margin-bottom: 18px; display: none; }
+        .alert-error { background: #fee2e2; color: var(--error); border: 1px solid #fca5a5; }
+        .alert-success { background: #dcfce7; color: var(--success); border: 1px solid #86efac; }
+    </style>
+</head>
+<body>
+
+<div class="wizard-card">
+    <div class="wizard-header">
+        <h1>NewInfrizo Installation</h1>
+        <p>Set up your database, site parameters, and admin account</p>
+    </div>
+
+    <!-- Stepper Navigation Header -->
+    <div class="stepper">
+        <div class="step-item active" id="st-1"><div class="step-circle">1</div><div class="step-label">Prechecks</div></div>
+        <div class="step-item" id="st-2"><div class="step-circle">2</div><div class="step-label">Database</div></div>
+        <div class="step-item" id="st-3"><div class="step-circle">3</div><div class="step-label">Site Info</div></div>
+        <div class="step-item" id="st-4"><div class="step-circle">4</div><div class="step-label">Admin</div></div>
+    </div>
+
+    <div id="alertBox" class="alert"></div>
+
+    <form id="installForm">
+        <!-- STEP 1: Server Requirements Precheck -->
+        <div class="step-panel active" id="step-1">
+            <ul class="check-list">
+                <li class="check-item">Python Version (3.10+) <span class="badge badge-pass" id="chk-python">Pass</span></li>
+                <li class="check-item">PostgreSQL Driver (psycopg2) <span class="badge badge-pass" id="chk-postgres">Pass</span></li>
+                <li class="check-item">MySQL Driver (mysqlclient) <span class="badge badge-pass" id="chk-mysql">Pass</span></li>
+                <li class="check-item">Environment Write Access (.env) <span class="badge badge-pass" id="chk-env">Pass</span></li>
+            </ul>
+        </div>
+
+        <!-- STEP 2: Database Configuration -->
+        <div class="step-panel" id="step-2">
+            <div class="form-group">
+                <label>Database Engine</label>
+                <select id="engine" onchange="updateDefaultPort()">
+                    <option value="sqlite3">SQLite3 (Development & Initial Setup)</option>
+                    <option value="postgresql">PostgreSQL (Production Engine)</option>
+                    <option value="mysql">MySQL (Production Engine)</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Database Host</label>
+                    <input type="text" id="host" value="localhost" required>
+                </div>
+                <div class="form-group">
+                    <label>Database Port</label>
+                    <input type="text" id="port" value="5432" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Database Name</label>
+                <input type="text" id="dbname" value="newinfrizo_db" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Database User</label>
+                    <input type="text" id="dbuser" value="postgres" required>
+                </div>
+                <div class="form-group">
+                    <label>Database Password</label>
+                    <input type="password" id="dbpass">
+                </div>
+            </div>
+            <button type="button" class="btn btn-secondary" style="width: 100%;" onclick="testDBConnection()">Test Database Connection</button>
+        </div>
+
+        <!-- STEP 3: Site Configuration -->
+        <div class="step-panel" id="step-3">
+            <div class="form-group">
+                <label>Site Name</label>
+                <input type="text" id="site_name" value="NewInfrizo System" required>
+            </div>
+            <div class="form-group">
+                <label>Site Backend URL</label>
+                <input type="url" id="site_url" value="http://127.0.0.1:8000" required>
+            </div>
+            <div class="form-group">
+                <label>Allowed Frontend Origin (CORS)</label>
+                <input type="text" id="cors_origin" value="http://localhost:5173" required>
+            </div>
+        </div>
+
+        <!-- STEP 4: Admin Account Setup -->
+        <div class="step-panel" id="step-4">
+            <div class="form-group">
+                <label>Admin Username</label>
+                <input type="text" id="admin_user" value="admin" required>
+            </div>
+            <div class="form-group">
+                <label>Admin Email</label>
+                <input type="email" id="admin_email" value="admin@newinfrizo.local" required>
+            </div>
+            <div class="form-group">
+                <label>Admin Password</label>
+                <input type="password" id="admin_pass" required>
+            </div>
+        </div>
+
+        <!-- Navigation Controls -->
+        <div class="wizard-actions">
+            <button type="button" class="btn btn-secondary" id="prevBtn" onclick="changeStep(-1)" disabled>Previous</button>
+            <button type="button" class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">Continue</button>
+        </div>
+    </form>
+</div>
+
+<script>
+let currentStep = 1;
+const totalSteps = 4;
+let dbVerified = false;
+
+function updateDefaultPort() {
+    const engine = document.getElementById('engine').value;
+    if (engine === 'sqlite3') {
+        document.getElementById('dbname').value = 'db.sqlite3';
+        document.getElementById('port').value = '';
+    } else if (engine === 'postgresql') {
+        document.getElementById('dbname').value = 'newinfrizo_db';
+        document.getElementById('port').value = '5432';
+    } else {
+        document.getElementById('dbname').value = 'newinfrizo_db';
+        document.getElementById('port').value = '3306';
+    }
+    dbVerified = false;
+}
+
+function showAlert(msg, isError = true) {
+    const box = document.getElementById('alertBox');
+    box.className = 'alert ' + (isError ? 'alert-error' : 'alert-success');
+    box.innerText = msg;
+    box.style.display = 'block';
+}
+
+function hideAlert() {
+    document.getElementById('alertBox').style.display = 'none';
+}
+
+async function testDBConnection() {
+    hideAlert();
+    showAlert('Testing database parameters...', false);
+
+    try {
+        const res = await fetch('/install/api/test-db/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                engine: document.getElementById('engine').value,
+                host: document.getElementById('host').value,
+                port: document.getElementById('port').value,
+                name: document.getElementById('dbname').value,
+                user: document.getElementById('dbuser').value,
+                password: document.getElementById('dbpass').value
+            })
+        });
+        const data = await res.json();
+        if (data.success) {
+            dbVerified = true;
+            showAlert(data.message, false);
+        } else {
+            dbVerified = false;
+            showAlert('Connection failed: ' + data.message, true);
+        }
+    } catch (e) {
+        dbVerified = false;
+        showAlert('Network error while testing connection.', true);
+    }
+}
+
+async function changeStep(delta) {
+    hideAlert();
+
+    // Validation before moving forward
+    if (delta > 0) {
+        if (currentStep === 2 && !dbVerified) {
+            showAlert('Please run a successful database connection test before proceeding.');
+            return;
+        }
+        if (currentStep === 3) {
+            if (!document.getElementById('site_name').value || !document.getElementById('site_url').value) {
+                showAlert('Please fill in all site settings.');
+                return;
+            }
+        }
+    }
+
+    currentStep += delta;
+
+    if (currentStep > totalSteps) {
+        runFullInstallation();
+        return;
+    }
+
+    updateUI();
+}
+
+function updateUI() {
+    // Show correct panel
+    document.querySelectorAll('.step-panel').forEach((panel, idx) => {
+        panel.classList.toggle('active', idx + 1 === currentStep);
+    });
+
+    // Update stepper icons
+    document.querySelectorAll('.step-item').forEach((item, idx) => {
+        item.classList.remove('active', 'completed');
+        if (idx + 1 === currentStep) item.classList.add('active');
+        if (idx + 1 < currentStep) item.classList.add('completed');
+    });
+
+    // Control buttons
+    document.getElementById('prevBtn').disabled = currentStep === 1;
+    document.getElementById('nextBtn').innerText = currentStep === totalSteps ? 'Install NewInfrizo' : 'Continue';
+}
+
+async function runFullInstallation() {
+    showAlert('Installing system, applying migrations, and creating superuser...', false);
+    document.getElementById('nextBtn').disabled = true;
+    document.getElementById('prevBtn').disabled = true;
+
+    try {
+        const res = await fetch('/install/api/run/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                engine: document.getElementById('engine').value,
+                host: document.getElementById('host').value,
+                port: document.getElementById('port').value,
+                name: document.getElementById('dbname').value,
+                user: document.getElementById('dbuser').value,
+                password: document.getElementById('dbpass').value,
+                site_name: document.getElementById('site_name').value,
+                site_url: document.getElementById('site_url').value,
+                cors_origin: document.getElementById('cors_origin').value,
+                admin_username: document.getElementById('admin_user').value,
+                admin_email: document.getElementById('admin_email').value,
+                admin_password: document.getElementById('admin_pass').value
+            })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+            alert('Installation completed successfully! Redirecting to the admin dashboard...');
+            window.location.href = '/admin/';
+        } else {
+            showAlert('Installation failed: ' + data.error, true);
+            document.getElementById('nextBtn').disabled = false;
+            document.getElementById('prevBtn').disabled = false;
+        }
+    } catch (err) {
+        showAlert('Critical error during installation execution.', true);
+        document.getElementById('nextBtn').disabled = false;
+        document.getElementById('prevBtn').disabled = false;
+    }
+}
+</script>
+</body>
+</html>

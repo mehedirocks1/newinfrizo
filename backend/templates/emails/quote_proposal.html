@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Official Quote Proposal</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f8f9fa; color: #344767; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .header { text-align: center; border-bottom: 2px solid #e9ecef; padding-bottom: 20px; margin-bottom: 20px; }
+        .title { color: #cb0c9f; font-size: 24px; font-weight: bold; margin: 0; }
+        .content { font-size: 15px; line-height: 1.6; }
+        .box { background: #f8f9fa; border-left: 4px solid #cb0c9f; padding: 15px; border-radius: 4px; margin: 20px 0; }
+        .footer { margin-top: 30px; border-top: 1px solid #e9ecef; padding-top: 15px; text-align: center; font-size: 12px; color: #8392ab; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">{{ site_name }}</h1>
+        </div>
+        <div class="content">
+            <h2>Dear {{ client_name }},</h2>
+            <p>We are pleased to issue the official proposal for your project: <strong>{{ quote.project_title }}</strong>.</p>
+            <div class="box">
+                <p><strong>Proposal Number:</strong> #{{ proposal.proposal_number }}</p>
+                <p><strong>Proposed Investment:</strong> {{ site_config.currency_symbol }}{{ proposal.proposed_cost }}</p>
+                <p><strong>Estimated Delivery:</strong> {{ proposal.estimated_delivery_days }} Business Days</p>
+            </div>
+            <p>Attached to this email is the formal PDF proposal containing full scope details, milestones, and payment terms.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2026 {{ site_name }}. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

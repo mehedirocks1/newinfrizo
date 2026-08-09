@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Application Approved</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f8f9fa; color: #344767; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .header { text-align: center; border-bottom: 2px solid #e9ecef; padding-bottom: 20px; margin-bottom: 20px; }
+        .title { color: #82d616; font-size: 24px; font-weight: bold; margin: 0; }
+        .content { font-size: 15px; line-height: 1.6; }
+        .box { background: #f8f9fa; border-left: 4px solid #82d616; padding: 15px; border-radius: 4px; margin: 20px 0; }
+        .footer { margin-top: 30px; border-top: 1px solid #e9ecef; padding-top: 15px; text-align: center; font-size: 12px; color: #8392ab; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">{{ site_name }} Marketplace</h1>
+        </div>
+        <div class="content">
+            <h2>Welcome {{ applicant_name }}!</h2>
+            <p>We are excited to inform you that your application for <strong>{{ title }}</strong> has been approved!</p>
+            <div class="box">
+                <p>Your freelancer profile is now live on our talent network.</p>
+            </div>
+            <p>Log in to your account to showcase your portfolio, manage client inquiries, and view assigned projects.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2026 {{ site_name }}. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

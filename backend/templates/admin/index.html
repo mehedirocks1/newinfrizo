@@ -1,0 +1,148 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div id="content-main" style="padding: 10px 0;">
+    
+    <!-- Soft UI Dashboard Top Banner -->
+    <div style="background: linear-gradient(310deg, #141727 0%, #3A416F 100%); padding: 24px 30px; border-radius: 20px; color: #ffffff; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+        <div>
+            <span style="background: rgba(203, 12, 159, 0.25); border: 1px solid rgba(203, 12, 159, 0.5); color: #e293d3; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+                Soft UI Executive Panel
+            </span>
+            <h2 style="font-size: 24px; font-weight: 800; margin-top: 8px; color: #ffffff;">NewInfrizo Enterprise Control Center</h2>
+            <p style="font-size: 13px; color: #cbd5e1; margin-top: 4px;">
+                Manage Software Marketplace items, E-Commerce store products, Freelancers, PDF Quotes, and Blog publications.
+            </p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <a href="{% url 'admin:quotes_quoterequest_changelist' %}" class="button" style="background: linear-gradient(310deg, #7928CA 0%, #FF0080 100%); color: #ffffff;">
+                <i class="ri-file-pdf-line"></i> Manage PDF Quotes
+            </a>
+            <a href="{% url 'admin:blog_blogpost_add' %}" class="button" style="background: linear-gradient(310deg, #21D4FD 0%, #2176FF 100%); color: #ffffff;">
+                <i class="ri-edit-2-line"></i> Write Blog Post
+            </a>
+        </div>
+    </div>
+
+    <!-- Soft UI KPI Stat Cards Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 35px;">
+        
+        <!-- KPI 1: Financial Ledger Revenue -->
+        <div style="background: var(--admin-card-bg); padding: 22px; border-radius: 20px; box-shadow: var(--admin-shadow); border: 1px solid var(--admin-card-border); display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <span style="font-size: 11px; font-weight: 800; color: var(--admin-text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Financial Ledger</span>
+                <h3 style="font-size: 20px; font-weight: 800; color: var(--admin-text-primary); margin-top: 4px;">Accounting ERP</h3>
+                <a href="{% url 'admin:core_financialtransaction_changelist' %}" style="font-size: 12px; color: #cb0c9f; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; margin-top: 6px;">
+                    <span>View Revenue Ledger</span> &rarr;
+                </a>
+            </div>
+            <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(310deg, #7928CA 0%, #FF0080 100%); display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 24px; box-shadow: 0 4px 15px rgba(203, 12, 159, 0.4);">
+                <i class="ri-bank-card-line"></i>
+            </div>
+        </div>
+
+        <!-- KPI 2: Software Quotes -->
+        <div style="background: var(--admin-card-bg); padding: 22px; border-radius: 20px; box-shadow: var(--admin-shadow); border: 1px solid var(--admin-card-border); display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <span style="font-size: 11px; font-weight: 800; color: var(--admin-text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Software Marketplace</span>
+                <h3 style="font-size: 20px; font-weight: 800; color: var(--admin-text-primary); margin-top: 4px;">Quote Requests</h3>
+                <a href="{% url 'admin:quotes_quoterequest_changelist' %}" style="font-size: 12px; color: #0284c7; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; margin-top: 6px;">
+                    <span>Manage Proposals</span> &rarr;
+                </a>
+            </div>
+            <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(310deg, #21D4FD 0%, #2176FF 100%); display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 24px; box-shadow: 0 4px 15px rgba(33, 212, 253, 0.4);">
+                <i class="ri-file-text-line"></i>
+            </div>
+        </div>
+
+        <!-- KPI 3: E-Commerce Orders -->
+        <div style="background: var(--admin-card-bg); padding: 22px; border-radius: 20px; box-shadow: var(--admin-shadow); border: 1px solid var(--admin-card-border); display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <span style="font-size: 11px; font-weight: 800; color: var(--admin-text-muted); text-transform: uppercase; letter-spacing: 0.5px;">E-Commerce Platform</span>
+                <h3 style="font-size: 20px; font-weight: 800; color: var(--admin-text-primary); margin-top: 4px;">Store Orders</h3>
+                <a href="{% url 'admin:store_order_changelist' %}" style="font-size: 12px; color: #16a34a; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; margin-top: 6px;">
+                    <span>View Store Sales</span> &rarr;
+                </a>
+            </div>
+            <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(310deg, #17AD37 0%, #98EC2D 100%); display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 24px; box-shadow: 0 4px 15px rgba(130, 214, 22, 0.4);">
+                <i class="ri-shopping-cart-2-line"></i>
+            </div>
+        </div>
+
+        <!-- KPI 4: Freelancer Applications -->
+        <div style="background: var(--admin-card-bg); padding: 22px; border-radius: 20px; box-shadow: var(--admin-shadow); border: 1px solid var(--admin-card-border); display: flex; align-items: center; justify-content: space-between;">
+            <div>
+                <span style="font-size: 11px; font-weight: 800; color: var(--admin-text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Freelancer Network</span>
+                <h3 style="font-size: 20px; font-weight: 800; color: var(--admin-text-primary); margin-top: 4px;">Applications</h3>
+                <a href="{% url 'admin:marketplace_freelancerapplication_changelist' %}" style="font-size: 12px; color: #ef4444; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; margin-top: 6px;">
+                    <span>Approve Talent</span> &rarr;
+                </a>
+            </div>
+            <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(310deg, #F5365C 0%, #F56036 100%); display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 24px; box-shadow: 0 4px 15px rgba(245, 54, 92, 0.4);">
+                <i class="ri-user-star-line"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Soft UI Module Applications Grid -->
+    {% if app_list %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px;">
+        {% for app in app_list %}
+            <div class="module">
+                <table style="width:100%; border-collapse: collapse;">
+                    <caption>
+                        <a href="{{ app.app_url }}" class="section" style="color: #ffffff; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                            <i class="ri-apps-line"></i>
+                            <span>{{ app.name }}</span>
+                        </a>
+                    </caption>
+                    {% for model in app.models %}
+                        <tr class="model-{{ model.object_name|lower }}">
+                            {% if model.admin_url %}
+                                <th scope="row" style="padding: 14px 18px; font-weight: 700;">
+                                    <a href="{{ model.admin_url }}" style="color: var(--admin-text-primary); text-decoration: none;">{{ model.name }}</a>
+                                </th>
+                            {% else %}
+                                <th scope="row" style="padding: 14px 18px; font-weight: 700; color: var(--admin-text-primary);">{{ model.name }}</th>
+                            {% endif %}
+
+                            {% if model.add_url %}
+                                <td style="width: 80px; text-align: center;">
+                                    <a href="{{ model.add_url }}" style="color: #cb0c9f; font-weight: 700; text-decoration: none; font-size: 12px; background: rgba(203, 12, 159, 0.1); padding: 4px 10px; border-radius: 12px;">
+                                        + Add
+                                    </a>
+                                </td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
+
+                            {% if model.admin_url %}
+                                {% if model.view_only %}
+                                    <td style="width: 80px; text-align: center;">
+                                        <a href="{{ model.admin_url }}" style="color: #0284c7; font-weight: 700; text-decoration: none; font-size: 12px; background: rgba(33, 212, 253, 0.1); padding: 4px 10px; border-radius: 12px;">
+                                            View
+                                        </a>
+                                    </td>
+                                {% else %}
+                                    <td style="width: 80px; text-align: center;">
+                                        <a href="{{ model.admin_url }}" style="color: #0284c7; font-weight: 700; text-decoration: none; font-size: 12px; background: rgba(33, 212, 253, 0.1); padding: 4px 10px; border-radius: 12px;">
+                                            Change
+                                        </a>
+                                    </td>
+                                {% endif %}
+                            {% else %}
+                                <td></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p>{% translate 'You do not have permission to view or edit anything.' %}</p>
+    {% endif %}
+</div>
+{% endblock %}
